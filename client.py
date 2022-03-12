@@ -1,10 +1,14 @@
 import socket
 
-c = socket.socket()
+clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-c.connect(('localhost', 9998))
+host = socket.gethostname()
+port = 224
+
+clientsocket.connect((host, port))
 
 name = input("Who are you: ")
-c.send(bytes(name, 'utf-8'))
-
-print(c.recv(1024).decode())  # for decoding byte
+clientsocket.send(bytes(name, 'utf-8'))
+print(clientsocket.recv(1024).decode())  # for decoding byte
+message = clientsocket.recv(1024)
+clientsocket.close()
