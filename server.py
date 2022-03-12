@@ -1,16 +1,20 @@
 import socket
 
-s = socket.socket()  # by default ipv4 and TCP
+serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # by default ipv4 and TCP
 print('Socket Created')
 
+host = socket.gethostname()
+port = 224
+
 # bind your socket with port
-s.bind(('localhost', 9998))
-s.listen(3)
+serversocket.bind((host, port))
+serversocket.listen(3)
 print('Waiting for connection')
 
 while True:
-    c, addr = s.accept()
-    name = c.recv(1024).decode()
-    print('Connected with', addr,name)
-    c.send(bytes('Done', 'utf-8'))  # This is convert it into bytes from string
-    c.close()
+    clientsocket, address = serversocket.accept()
+    name = clientsocket.recv(1024).decode()
+    print(f"Connected with {address},{name}")
+    message = f"Thank-you {name} for connecting with me..."
+    clientsocket.send(bytes(message, 'utf-8'))  # This is convert it into bytes from string
+    clientsocket.close()
